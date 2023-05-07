@@ -1,26 +1,46 @@
-import React from 'react';
-import { Form, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import GridDataView from './GridDataView';
+import ListPage from "./layout/ListPage";
+import FuncionariosService from "../service/FuncionariosService";
 
 const Funcionarios = () => {
+
+    const [funcionarios, setFuncionarios] = useState([]);
+    const navigate = useNavigate();
+
+    const btnAdicionar = () => {
+        navigate('/forms/funcionario');
+    }
+
+    const header = {
+        datas: [
+            { name: 'id', value: 'Registro' },
+            { name: 'nome', value: 'Nome' },
+            { name: 'remover', label: 'Remover', type: 'button', click: (item) => {
+                console.log('removerFuncionario', item);
+                alert('Remover');
+            }}
+        ],
+    };
+
+    useEffect(() => {
+        const funcs = FuncionariosService.findAll();
+        setFuncionarios(funcs);
+    }, []);
+
     return (
-        <>
-            <h1 style={{ color: "green" }}>
-                Cadastro Funcionários
-            </h1>
-            <Form>
-                <Form.Group className="mb-3" controlId="formRegistro">
-                    <Form.Label>Registro</Form.Label>
-                    <Form.Control type="input" placeholder="Id de Registro" />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formNome">
-                    <Form.Label>Nome</Form.Label>
-                    <Form.Control type="input" placeholder="Nome" />
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-            </Form>
-        </>
+        <ListPage 
+            title={'Funcionários'}
+            btnAdicionar={btnAdicionar}
+        >
+            <GridDataView 
+                key={'funcionarios'}
+                index={'funcionarios'}
+                datas={funcionarios}
+                headers={header}
+            />
+        </ListPage>
     );
 };
 
