@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/DaniloOC/ficha-dimensional-app/static/css/main.756af292.css",
+    "main.js": "/DaniloOC/ficha-dimensional-app/static/js/main.82c1ef35.js",
+    "static/js/787.6fd29f56.chunk.js": "/DaniloOC/ficha-dimensional-app/static/js/787.6fd29f56.chunk.js",
+    "index.html": "/DaniloOC/ficha-dimensional-app/index.html",
+    "main.756af292.css.map": "/DaniloOC/ficha-dimensional-app/static/css/main.756af292.css.map",
+    "main.82c1ef35.js.map": "/DaniloOC/ficha-dimensional-app/static/js/main.82c1ef35.js.map",
+    "787.6fd29f56.chunk.js.map": "/DaniloOC/ficha-dimensional-app/static/js/787.6fd29f56.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.756af292.css",
+    "static/js/main.82c1ef35.js"
+  ]
+}
