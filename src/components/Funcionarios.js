@@ -19,7 +19,17 @@ const Funcionarios = () => {
             { name: 'nome', value: 'Nome' },
             { name: 'remover', label: 'Remover', type: 'button', click: (item) => {
                 console.log('removerFuncionario', item);
-                alert('Remover');
+                const index = funcionarios.findIndex(({ id }) => id === item.id);
+                if (index !== -1) {
+                    setFuncionarios([
+                        ...funcionarios.slice(0, index),
+                        ...funcionarios.slice(index + 1)
+                    ]);
+                }
+            }},
+            { name: 'editar', label: 'Editar', type: 'button', click: (item) => {
+                console.log('editarFuncionario', item);
+                navigate('/forms/funcionario/' + item.id);
             }}
         ],
     };
@@ -30,11 +40,11 @@ const Funcionarios = () => {
     }, []);
 
     return (
-        <ListPage 
+        <ListPage
             title={'Funcionários'}
             btnAdicionar={btnAdicionar}
         >
-            <GridDataView 
+            <GridDataView
                 key={'funcionarios'}
                 index={'funcionarios'}
                 datas={funcionarios}

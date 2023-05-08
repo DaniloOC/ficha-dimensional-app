@@ -8,7 +8,12 @@ import Instrumentos from './components/Instrumentos';
 import Maquinas from './components/Maquinas';
 import Produtos from './components/Produtos';
 import Setores from './components/Setores';
+import Ficha from './components/forms/Ficha';
 import Funcionario from './components/forms/Funcionario';
+import Instrumento from './components/forms/Instrumento';
+import Maquina from './components/forms/Maquina';
+import Produto from './components/forms/Produto';
+import Setor from './components/forms/Setor';
 
 const Header = () => {
     return (
@@ -43,7 +48,12 @@ function App() {
                             <Route exact path="/setores" element={<Setores />} />
                             <Route exact path="/funcionarios" element={<Funcionarios />} />
                             <Route exact path="/instrumentos" element={<Instrumentos />} />
-                            <Route exact path="/forms/funcionario" element={<Funcionario />} />
+                            <Route path="/forms/ficha/:id?" element={<Ficha />} />
+                            <Route path="/forms/produto/:id?" element={<Produto />} />
+                            <Route path="/forms/maquina/:id?" element={<Maquina />} />
+                            <Route path="/forms/setor/:id?" element={<Setor />} />
+                            <Route path="/forms/funcionario/:id?" element={<Funcionario />} />
+                            <Route path="/forms/instrumento/:id?" element={<Instrumento />} />
                         </Routes>
                     </Row>
                 </Router>
