@@ -16,12 +16,12 @@ const FuncionariosService = {
 
     findById: function (id) {
         if (id === undefined || id === '') {
-            return null;
+            return {};
         }
         const itens = this.funcionarios.filter((f) => {
             return f.id === parseInt(id);
         });
-        return itens.length > 0 ? itens[0] : null;
+        return itens.length > 0 ? itens[0] : {};
     }
 
 };

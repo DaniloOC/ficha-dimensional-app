@@ -16,12 +16,12 @@ const ProdutosService = {
 
     findById: function (id) {
         if (id === undefined || id === '') {
-            return null;
+            return {};
         }
         const itens = this.produtos.filter((f) => {
             return f.id === parseInt(id);
         });
-        return itens.length > 0 ? itens[0] : null;
+        return itens.length > 0 ? itens[0] : {};
     }
 
 };
