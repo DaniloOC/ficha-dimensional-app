@@ -37,12 +37,19 @@ const Ficha = () => {
         setCotas(cotasCol);
 
         let apts = [];
+        let aptsCotas = [];
+        for (let i = 0; i < quantidadeCotas; i++) {
+            aptsCotas.push(<td></td>);
+        }
         for (let i = 0; i < 8; i++) {
             const rowApt = 
                 <tr>
                     <td>
                         {i + 1}
                     </td>
+                    {aptsCotas}
+                    <td></td>
+                    <td></td>
                 </tr>;
             apts.push(rowApt);
         }

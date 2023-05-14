@@ -30,7 +30,7 @@ const Setor = () => {
     return (
         <Container>
             <FormPage
-                title={"Cadastro de produtos"}
+                title={"Cadastro de setor"}
             >
                 <Form onSubmit={onFormSubmit}>
                     <Row>
