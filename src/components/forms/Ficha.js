@@ -63,21 +63,21 @@ const Ficha = () => {
             >
                 <Form onSubmit={onFormSubmit}>
                     <Row>
-                        <Table>
+                        <Table striped bordered hover>
                             <thead>
                                 <tr>
                                     <td rowSpan={3} colSpan={3}>Figura</td>
                                     <td colSpan={quantidadeCotas}>Empresa 1</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={quantidadeCotas + 3 - 5} >Nome</td>
-                                    <td>Registro</td>
-                                    <td>Turno</td>
+                                    <td colSpan={quantidadeCotas + 3 - 5} >Nome: {ficha.nome}</td>
+                                    <td>Registro: {ficha.registro}</td>
+                                    <td>Turno: {ficha.turno}</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={(quantidadeCotas + 3 - 3) / 3}>Máquina</td>
-                                    <td colSpan={(quantidadeCotas + 3 - 3) / 3}>Setor</td>
-                                    <td colSpan={(quantidadeCotas + 3 - 3) / 3}>Produto</td>
+                                    <td colSpan={(quantidadeCotas + 3 - 3) / 3}>Máquina: {ficha.maquina}</td>
+                                    <td colSpan={(quantidadeCotas + 3 - 3) / 3}>Setor: {ficha.setor}</td>
+                                    <td colSpan={(quantidadeCotas + 3 - 3) / 3}>Produto: {ficha.produto}</td>
                                 </tr>
                                 <tr>
                                     <td>Hora</td>
