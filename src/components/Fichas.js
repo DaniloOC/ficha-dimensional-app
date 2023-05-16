@@ -10,7 +10,7 @@ const Fichas = () => {
     const navigate = useNavigate();
 
     const btnAdicionar = () => {
-        navigate('/forms/ficha');
+        navigate('/modal/ficha');
     }
 
     const header = {

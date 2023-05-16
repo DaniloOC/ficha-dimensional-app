@@ -14,6 +14,7 @@ import Instrumento from './components/forms/Instrumento';
 import Maquina from './components/forms/Maquina';
 import Produto from './components/forms/Produto';
 import Setor from './components/forms/Setor';
+import FichaModal from './components/FichaModal';
 
 const Header = () => {
     return (
@@ -42,6 +43,7 @@ function App() {
                     </Row>
                     <Row>
                         <Routes>
+                            <Route exact path='/ficha-dimensional-app' element={<Fichas />} />
                             <Route exact path="/" element={<Fichas />} />
                             <Route exact path="/produtos" element={<Produtos />} />
                             <Route exact path="/maquinas" element={<Maquinas />} />
@@ -54,6 +56,7 @@ function App() {
                             <Route path="/forms/setor/:id?" element={<Setor />} />
                             <Route path="/forms/funcionario/:id?" element={<Funcionario />} />
                             <Route path="/forms/instrumento/:id?" element={<Instrumento />} />
+                            <Route path='/modal/ficha' element={<FichaModal />} />
                         </Routes>
                     </Row>
                 </Router>
