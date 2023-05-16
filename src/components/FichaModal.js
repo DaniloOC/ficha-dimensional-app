@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
-import { Modal, Button, Form } from "react-bootstrap";
 import MaquinasService from "../service/MaquinasService";
-import SetoresService from "../service/SetoresService";
 import ProdutosService from "../service/ProdutosService";
+import SetoresService from "../service/SetoresService";
 
 const FichaModal = () => {
 
@@ -13,33 +13,44 @@ const FichaModal = () => {
     const [setoresSelect, setSetoresSelect] = useState([]);
     const [produtosSelect, setProdutosSelect] = useState([]);
 
+    const [turnoId, setTurnoId] = useState('MANHA');
+    const [maquinaId, setMaquinaId] = useState('');
+    const [setorId, setSetorId] = useState('');
+    const [produtoId, setProdutoId] = useState('');
+
     const handleClose = () => { 
         setShow(false);
         navigate('/');
     }
 
     const criarFicha = () => {
-        navigate('/forms/ficha');
+        navigate('/forms/ficha?turno=' + turnoId + '&maquina=' + maquinaId + "&setor=" + setorId + "&produto=" + produtoId);
     }
 
     useEffect(() => {
         const maqs = [];
-        MaquinasService.findAll().forEach((maq) => {
+        const maquinas = MaquinasService.findAll();
+        maquinas.forEach((maq) => {
             maqs.push(<option value={maq.id}>{maq.nome}</option>);
         });
         setMaquinasSelect(maqs);
+        setMaquinaId(maquinas[0].id);
 
-        const setores = []
-        SetoresService.findAll().forEach((setor) => {
-            setores.push(<option value={setor.id}>{setor.nome}</option>);
+        const setoresOpt = [];
+        const setores = SetoresService.findAll();
+        setores.forEach((setor) => {
+            setoresOpt.push(<option value={setor.id}>{setor.nome}</option>);
         });
-        setSetoresSelect(setores);
+        setSetoresSelect(setoresOpt);
+        setSetorId(setores[0].id);
 
-        const produtos = []
-        ProdutosService.findAll().forEach((produto) => {
-            produtos.push(<option value={produto.id}>{produto.nome}</option>);
+        const produtosOpt = [];
+        const produtos = ProdutosService.findAll();
+        produtos.forEach((produto) => {
+            produtosOpt.push(<option value={produto.id}>{produto.nome}</option>);
         });
-        setProdutosSelect(produtos);
+        setProdutosSelect(produtosOpt);
+        setProdutoId(produtos[0].id);
     }, []);
 
     return (
@@ -52,7 +63,11 @@ const FichaModal = () => {
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>Turno</Form.Label>
-                            <Form.Select aria-label="Turno">
+                            <Form.Select 
+                                aria-label="Turno"
+                                value={turnoId}
+                                onChange={(event) => setTurnoId(event.currentTarget.value)}
+                            >
                                 <option value="MANHA">Manhã</option>
                                 <option value="TARDE">Tarde</option>
                                 <option value="NOITE">Noite</option>
@@ -60,19 +75,31 @@ const FichaModal = () => {
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Máquina</Form.Label>
-                            <Form.Select aria-label="Máquina">
+                            <Form.Select 
+                                aria-label="Máquina"
+                                value={maquinaId}
+                                onChange={(event) => setMaquinaId(event.currentTarget.value)}
+                            >
                                 {maquinasSelect}
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Setor</Form.Label>
-                            <Form.Select aria-label="Setor">
+                            <Form.Select 
+                                aria-label="Setor"
+                                value={setorId}
+                                onChange={(event) => setSetorId(event.currentTarget.value)}
+                            >
                                 {setoresSelect}
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Produto</Form.Label>
-                            <Form.Select aria-label="Produto">
+                            <Form.Select 
+                                aria-label="Produto"
+                                value={produtoId}
+                                onChange={(event) => setProdutoId(event.currentTarget.value)}
+                            >
                                 {produtosSelect}
                             </Form.Select>
                         </Form.Group>
