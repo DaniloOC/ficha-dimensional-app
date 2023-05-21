@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Form, Row, Table } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import FichasService from "../../service/FichasService";
 import FormButton from "../layout/FormButton";
 import FormPage from '../layout/FormPage';
@@ -8,11 +8,13 @@ import FormPage from '../layout/FormPage';
 const Ficha = () => {
 
     const navigate = useNavigate();
-    const params = useParams();
-    const [ficha, setFicha] = useState([]);
+    const [ficha, setFicha] = useState({});
+    const [produto, setProduto] = useState({});
     const [quantidadeCotas, setQuantidadeCotas] = useState(0);
     const [cotas, setCotas] = useState([]);
     const [apontamentos, setApontamentos] = useState([]);
+
+    const search = useLocation().search;
 
     const onFormSubmit = (event) => {
         event.preventDefault();
@@ -25,36 +27,46 @@ const Ficha = () => {
     };
 
     useEffect(() => {
-        const fch = FichasService.findById(params.id);
-        console.log("fch", fch);
-        setFicha(fch);
-        setQuantidadeCotas(6);
+        const s = new URLSearchParams(search);
+        console.log('s', s);
+        const turno = s.get('turno');
+        const maquina = s.get('maquina');
+        const setor = s.get('setor');
+        const produto = s.get('produto');
+        FichasService.findByTurnoMaquinaSetorProduto(turno, maquina, setor, produto)
+            // .then((r) => r.json())
+            .then((response) => {
+                console.log('FICHA >>', response);
+                setQuantidadeCotas(response.produto.qtdCotas);
+                setProduto(response.produto);
+                setFicha(response);
 
-        let cotasCol = [];
-        for (let i = 0; i < quantidadeCotas; i++) {
-            cotasCol.push(<td>Cota {i + 1}</td>);
-        }
-        setCotas(cotasCol);
+                let cotasCol = [];
+                for (let i = 0; i < response.produto.qtdCotas; i++) {
+                    cotasCol.push(<th>Cota {i + 1}</th>);
+                }
+                setCotas(cotasCol);
 
-        let apts = [];
-        let aptsCotas = [];
-        for (let i = 0; i < quantidadeCotas; i++) {
-            aptsCotas.push(<td></td>);
-        }
-        for (let i = 0; i < 8; i++) {
-            const rowApt = 
-                <tr>
-                    <td>
-                        {i + 1}
-                    </td>
-                    {aptsCotas}
-                    <td></td>
-                    <td></td>
-                </tr>;
-            apts.push(rowApt);
-        }
-        setApontamentos(apts);
-    }, [params, quantidadeCotas]);
+                let apts = [];
+                response.cotas.forEach((cota, i) => {
+                    let aptsCotas = [];
+                    for (let i2 = 0; i2 < cota.length; i2++) {
+                        aptsCotas.push(<td><Form.Control type="input" name={'cota_' + i + '_' + i2} value={cota[i2]} /></td>);
+                    }
+                    const rowApt = 
+                        <tr>
+                            <th>
+                                {i + 1}
+                            </th>
+                            {aptsCotas}
+                            <td><Form.Control type="input" name={'cotaQtd_' + i} value={''} /></td>
+                            <td><Form.Control type="input" name={'cotaObs_' + i} value={''} /></td>
+                        </tr>;
+                    apts.push(rowApt);
+                });
+                setApontamentos(apts);
+            });
+    }, [search]);
 
     return (
         <Container>
@@ -66,24 +78,24 @@ const Ficha = () => {
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
-                                    <td rowSpan={3} colSpan={3}>Figura</td>
-                                    <td colSpan={quantidadeCotas}>Empresa 1</td>
+                                    <th rowSpan={3} colSpan={3}>Figura</th>
+                                    <th colSpan={quantidadeCotas}>Empresa 1</th>
                                 </tr>
                                 <tr>
-                                    <td colSpan={quantidadeCotas + 3 - 5} >Nome: {ficha.nome}</td>
-                                    <td>Registro: {ficha.registro}</td>
-                                    <td>Turno: {ficha.turno}</td>
+                                    <th colSpan={quantidadeCotas + 3 - 5} >Nome: {ficha.nome}</th>
+                                    <th>Registro: {ficha.registro}</th>
+                                    <th>Turno: {ficha.turno}</th>
                                 </tr>
                                 <tr>
-                                    <td colSpan={(quantidadeCotas + 3 - 3) / 3}>Máquina: {ficha.maquina}</td>
-                                    <td colSpan={(quantidadeCotas + 3 - 3) / 3}>Setor: {ficha.setor}</td>
-                                    <td colSpan={(quantidadeCotas + 3 - 3) / 3}>Produto: {ficha.produto}</td>
+                                    <th colSpan={(quantidadeCotas + 3 - 3) / 3}>Máquina: {ficha.maquina}</th>
+                                    <th colSpan={(quantidadeCotas + 3 - 3) / 3}>Setor: {ficha.setor}</th>
+                                    <th colSpan={(quantidadeCotas + 3 - 3) / 3}>Produto: {produto.nome}</th>
                                 </tr>
                                 <tr>
-                                    <td>Hora</td>
+                                    <th>Hora</th>
                                     {cotas}
-                                    <td>Quantidade</td>
-                                    <td>Observações</td>
+                                    <th>Quantidade</th>
+                                    <th>Observações</th>
                                 </tr>
                             </thead>
                             <tbody>

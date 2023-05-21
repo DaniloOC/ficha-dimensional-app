@@ -16,7 +16,7 @@ const Fichas = () => {
     const header = {
         datas: [
             { name: 'id', value: 'Registro' },
-            { name: 'produto', value: 'Produto' },
+            { name: 'produto.nome', value: 'Produto' },
             { name: 'data', value: 'Data', type: 'date' },
             { name: 'remover', label: 'Remover', type: 'button', click: (item) => {
                 console.log('removerFuncionario', item);
