@@ -1,7 +1,8 @@
-import { Navbar, Row } from 'react-bootstrap';
+import { Col, Nav, Navbar, Row } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
-import { NavLink, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
+import FichaModal from './components/FichaModal';
 import Fichas from './components/Fichas';
 import Funcionarios from './components/Funcionarios';
 import Instrumentos from './components/Instrumentos';
@@ -14,20 +15,33 @@ import Instrumento from './components/forms/Instrumento';
 import Maquina from './components/forms/Maquina';
 import Produto from './components/forms/Produto';
 import Setor from './components/forms/Setor';
-import FichaModal from './components/FichaModal';
 
 const Header = () => {
     return (
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar fill collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Navbar.Brand >Ficha Dimensional</Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
-                <NavLink to="/">Fichas</NavLink>
-                <NavLink to="/produtos">Produtos</NavLink>
-                <NavLink to="/maquinas">Maquinas</NavLink>
-                <NavLink to="/setores">Setores</NavLink>
-                <NavLink to="/funcionarios">Funcionários</NavLink>
-                <NavLink to="/instrumentos">Instrumentos</NavLink>
+                <Nav fill variant="pills">
+                    <Nav.Item>
+                        <Nav.Link as={Link} to="/">Fichas</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link as={Link} to="/produtos">Produtos</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link as={Link} to="/maquinas">Maquinas</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link as={Link} to="/setores">Setores</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link as={Link} to="/funcionarios">Funcionários</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link as={Link} to="/instrumentos">Instrumentos</Nav.Link>
+                    </Nav.Item>
+                </Nav>
             </Navbar.Collapse>
         </Navbar>
     );
@@ -35,13 +49,15 @@ const Header = () => {
 
 function App() {
     return (
-        <div className="App">
-            <Container>
-                <Router>
-                    <Row>
+        <Container>
+            <Router>
+                <Row>
+                    <Col xs={12}>
                         <Header></Header>
-                    </Row>
-                    <Row>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12}>
                         <Routes>
                             <Route exact path='/ficha-dimensional-app' element={<Fichas />} />
                             <Route exact path="/" element={<Fichas />} />
@@ -58,10 +74,10 @@ function App() {
                             <Route path="/forms/instrumento/:id?" element={<Instrumento />} />
                             <Route path='/modal/ficha' element={<FichaModal />} />
                         </Routes>
-                    </Row>
-                </Router>
-            </Container>
-        </div>
+                    </Col>
+                </Row>
+            </Router>
+        </Container>
     );
 }
 
