@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Form, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import ProdutosService from "../../service/ProdutosService";
@@ -9,22 +9,37 @@ const Produto = () => {
 
     const navigate = useNavigate();
     const params = useParams();
-    const [produto, setProduto] = useState([]);
+    const [produto, setProduto] = useState({
+        id: null,
+        nome: '',
+        descricao: '',
+        quantidadeCotas: 0
+    });
 
     const onFormSubmit = (event) => {
         event.preventDefault();
-        console.log(event);
-        const formData = new FormData(event.target);
-        const formDataObj = Object.fromEntries(formData.entries());
-        console.log(formDataObj);
-        ProdutosService.add(formDataObj);
-        navigate('/produtos');
+        console.log('Produto:', produto);
+        ProdutosService.add(produto)
+            .then(() => setProduto({
+                id: null,
+                nome: '',
+                descricao: '',
+                quantidadeCotas: 0
+            }))
+            .then(() => navigate('/produtos'));
+    };
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setProduto({...produto, ...{[name]: value}});
     };
 
     useEffect(() => {
-        const prod = ProdutosService.findById(params.id);
-        console.log("prod", prod);
-        setProduto(prod);
+        if (params.id !== undefined && params.id !== '') {
+            ProdutosService.findById(params.id)
+                .then((r) => r.json())
+                .then((response) => setProduto(response));
+        }
     }, [params]);
 
     return (
@@ -34,21 +49,18 @@ const Produto = () => {
             >
                 <Form onSubmit={onFormSubmit}>
                     <Row>
-                        <Form.Group className="mb-3" controlId="formRegistro">
-                            <Form.Label>Registro</Form.Label>
-                            <Form.Control type="input" placeholder="Id de Registro" value={produto.id} />
-                        </Form.Group>
+                        <Form.Control type="hidden" name="id" value={produto.id} />
                         <Form.Group className="mb-3" controlId="formNome">
                             <Form.Label>Nome</Form.Label>
-                            <Form.Control type="input" placeholder="Nome" value={produto.nome} />
+                            <Form.Control type="input" placeholder="Nome" name="nome" value={produto.nome} onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formDescricao">
                             <Form.Label>Descrição</Form.Label>
-                            <Form.Control type="input" placeholder="Descrição" value={produto.descricao} />
+                            <Form.Control type="input" placeholder="Descrição" name="descricao" value={produto.descricao} onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formQtdCotas">
                             <Form.Label>Qtd. de Cotas</Form.Label>
-                            <Form.Control type="input" placeholder="Qtd. Cotas" value={produto.qtdCotas} />
+                            <Form.Control type="input" placeholder="Qtd. Cotas" name="quantidadeCotas" value={produto.quantidadeCotas} onChange={handleChange} />
                         </Form.Group>
                         <Form.Group controlId="formFileImage" className="mb-3">
                             <Form.Label>Default file input example</Form.Label>

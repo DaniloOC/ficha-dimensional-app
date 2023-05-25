@@ -18,16 +18,12 @@ const Produtos = () => {
             { name: 'id', value: 'Registro' },
             { name: 'nome', value: 'Nome' },
             { name: 'descricao', value: 'Descrição' },
-            { name: 'qtdCotas', value: 'Qtd. de Cotas' },
+            { name: 'quantidadeCotas', value: 'Qtd. de Cotas' },
             { name: 'remover', label: 'Remover', type: 'button', click: (item) => {
                 console.log('removerProduto', item);
-                const index = produtos.findIndex(({ id }) => id === item.id);
-                if (index !== -1) {
-                    setProdutos([
-                        ...produtos.slice(0, index),
-                        ...produtos.slice(index + 1)
-                    ]);
-                }
+                ProdutosService.remove(item.id)
+                    .then((r) => console.log('Removido com sucesso!'))
+                    .then(() => window.location.reload(false));
             }},
             { name: 'editar', label: 'Editar', type: 'button', click: (item) => {
                 console.log('editarProduto', item);
@@ -37,8 +33,9 @@ const Produtos = () => {
     };
 
     useEffect(() => {
-        const prods = ProdutosService.findAll();
-        setProdutos(prods);
+        ProdutosService.findAll()
+            .then((r) => r.json())
+            .then((response) => setProdutos(response));
     }, []);
 
     return (
