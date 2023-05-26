@@ -9,22 +9,35 @@ const Instrumento = () => {
 
     const navigate = useNavigate();
     const params = useParams();
-    const [instrumento, setInstrumento] = useState([]);
+    const [instrumento, setInstrumento] = useState({
+        id: null,
+        nome: '',
+        descricao: ''
+    });
 
     const onFormSubmit = (event) => {
         event.preventDefault();
-        console.log(event);
-        const formData = new FormData(event.target);
-        const formDataObj = Object.fromEntries(formData.entries());
-        console.log(formDataObj);
-        InstrumentosService.add(formDataObj);
-        navigate('/instrumentos');
+        console.log('Instrumento:', instrumento);
+        InstrumentosService.add(instrumento)
+            .then(() => setInstrumento({
+                id: null,
+                nome: '',
+                descricao: ''
+            }))
+            .then(() => navigate('/instrumentos'));
+    };
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setInstrumento({...instrumento, ...{[name]: value}});
     };
 
     useEffect(() => {
-        const intrs = InstrumentosService.findById(params.id);
-        console.log("intrs", intrs);
-        setInstrumento(intrs);
+        if (params.id !== undefined && params.id !== '') {
+            InstrumentosService.findById(params.id)
+                .then((r) => r.json())
+                .then((response) => setInstrumento(response));
+        }
     }, [params]);
 
     return (
@@ -34,17 +47,14 @@ const Instrumento = () => {
             >
                 <Form onSubmit={onFormSubmit}>
                     <Row>
-                        <Form.Group className="mb-3" controlId="formRegistro">
-                            <Form.Label>Registro</Form.Label>
-                            <Form.Control type="input" placeholder="Id de Registro" value={instrumento.id} />
-                        </Form.Group>
+                        <Form.Control type="hidden" name="id" value={instrumento.id} />
                         <Form.Group className="mb-3" controlId="formNome">
                             <Form.Label>Nome</Form.Label>
-                            <Form.Control type="input" placeholder="Nome" value={instrumento.nome} />
+                            <Form.Control type="input" placeholder="Nome" name="nome" value={instrumento.nome} onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formDescricao">
                             <Form.Label>Descrição</Form.Label>
-                            <Form.Control type="input" placeholder="Descrição" value={instrumento.descricao} />
+                            <Form.Control type="input" placeholder="Descrição" name="descricao" value={instrumento.descricao} onChange={handleChange} />
                         </Form.Group>
                     </Row>
                     <FormButton />

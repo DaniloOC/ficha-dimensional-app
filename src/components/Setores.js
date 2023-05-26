@@ -19,14 +19,10 @@ const Setores = () => {
             { name: 'nome', value: 'Nome' },
             { name: 'descricao', value: 'Descrição' },
             { name: 'remover', label: 'Remover', type: 'button', click: (item) => {
-                console.log('removerProduto', item);
-                const index = setores.findIndex(({ id }) => id === item.id);
-                if (index !== -1) {
-                    setSetores([
-                        ...setores.slice(0, index),
-                        ...setores.slice(index + 1)
-                    ]);
-                }
+                console.log('remover-setor', item);
+                SetoresService.remove(item.id)
+                    .then((r) => console.log('Removido com sucesso!'))
+                    .then(() => window.location.reload(false));
             }},
             { name: 'editar', label: 'Editar', type: 'button', click: (item) => {
                 console.log('editarSetor', item);
@@ -36,8 +32,9 @@ const Setores = () => {
     };
 
     useEffect(() => {
-        const sts = SetoresService.findAll();
-        setSetores(sts);
+        SetoresService.findAll()
+            .then((r) => r.json())
+            .then((response) => setSetores(response));
     }, []);
 
     return (

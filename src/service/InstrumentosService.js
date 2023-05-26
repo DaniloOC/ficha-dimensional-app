@@ -1,27 +1,27 @@
+const URI_API = "http://localhost:8080/api/instrumento";
+
 const InstrumentosService = {
 
-    instrumentos: [
-        { 'id': 1, 'nome': 'Paquímetro', descricao: 'Paquímetro Digital' },
-        { 'id': 2, 'nome': 'Micrômetro', descricao: 'Micrômetro Externo' },
-    ],
-
     findAll: function () {
-        return this.instrumentos;
+        return fetch(URI_API);
     },
 
     add: function (instrumento) {
-        console.log('add', instrumento);
-        this.instrumentos.push(instrumento);
+        console.log('add-instrumento', instrumento);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(instrumento)
+        };
+        return fetch(URI_API, requestOptions);
     },
 
     findById: function (id) {
-        if (id === undefined || id === '') {
-            return {};
-        }
-        const itens = this.instrumentos.filter((f) => {
-            return f.id === parseInt(id);
-        });
-        return itens.length > 0 ? itens[0] : {};
+        return fetch(URI_API + "/" + parseInt(id));
+    },
+
+    remove: function (id) {
+        return fetch(URI_API + "/" + parseInt(id), { method: 'DELETE' });
     }
 
 };

@@ -1,27 +1,27 @@
+const URI_API = "http://localhost:8080/api/funcionario";
+
 const FuncionariosService = {
 
-    funcionarios: [
-        { 'id': 1, 'nome': 'João Teste 1' },
-        { 'id': 2, 'nome': 'João Teste 2' }
-    ],
-
     findAll: function () {
-        return this.funcionarios;
+        return fetch(URI_API);
     },
 
     add: function (funcionario) {
-        console.log('add', funcionario);
-        this.funcionarios.push(funcionario);
+        console.log('add-funcionario', funcionario);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(funcionario)
+        };
+        return fetch(URI_API, requestOptions);
     },
 
     findById: function (id) {
-        if (id === undefined || id === '') {
-            return {};
-        }
-        const itens = this.funcionarios.filter((f) => {
-            return f.id === parseInt(id);
-        });
-        return itens.length > 0 ? itens[0] : {};
+        return fetch(URI_API + "/" + parseInt(id));
+    },
+
+    remove: function (id) {
+        return fetch(URI_API + "/" + parseInt(id), { method: 'DELETE' });
     }
 
 };

@@ -19,13 +19,10 @@ const Maquinas = () => {
             { name: 'nome', value: 'Nome' },
             { name: 'descricao', value: 'Descrição' },
             { name: 'remover', label: 'Remover', type: 'button', click: (item) => {
-                const index = maquinas.findIndex(({ id }) => id === item.id);
-                if (index !== -1) {
-                    setMaquinas([
-                        ...maquinas.slice(0, index),
-                        ...maquinas.slice(index + 1)
-                    ]);
-                }
+                console.log('remover-maquina', item);
+                MaquinasService.remove(item.id)
+                    .then((r) => console.log('Removido com sucesso!'))
+                    .then(() => window.location.reload(false));
             }},
             { name: 'editar', label: 'Editar', type: 'button', click: (item) => {
                 navigate('/forms/maquina/' + item.id);
@@ -34,8 +31,9 @@ const Maquinas = () => {
     };
 
     useEffect(() => {
-        const maqs = MaquinasService.findAll();
-        setMaquinas(maqs);
+        MaquinasService.findAll()
+            .then((r) => r.json())
+            .then((response) => setMaquinas(response));
     }, []);
 
     return (

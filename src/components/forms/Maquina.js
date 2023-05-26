@@ -9,22 +9,35 @@ const Maquina = () => {
 
     const navigate = useNavigate();
     const params = useParams();
-    const [maquina, setMaquina] = useState([]);
+    const [maquina, setMaquina] = useState({
+        id: null,
+        nome: '',
+        descricao: ''
+    });
 
     const onFormSubmit = (event) => {
         event.preventDefault();
-        console.log(event);
-        const formData = new FormData(event.target);
-        const formDataObj = Object.fromEntries(formData.entries());
-        console.log(formDataObj);
-        MaquinasService.add(formDataObj);
-        navigate('/maquinas');
+        console.log('Maquina:', maquina);
+        MaquinasService.add(maquina)
+            .then(() => setMaquina({
+                id: null,
+                nome: '',
+                descricao: ''
+            }))
+            .then(() => navigate('/maquinas'));
+    };
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setMaquina({...maquina, ...{[name]: value}});
     };
 
     useEffect(() => {
-        const maq = MaquinasService.findById(params.id);
-        console.log("maq", maq);
-        setMaquina(maq);
+        if (params.id !== undefined && params.id !== '') {
+            MaquinasService.findById(params.id)
+                .then((r) => r.json())
+                .then((response) => setMaquina(response));
+        }
     }, [params]);
 
     return (
@@ -34,17 +47,14 @@ const Maquina = () => {
             >
                 <Form onSubmit={onFormSubmit}>
                     <Row>
-                        <Form.Group className="mb-3" controlId="formRegistro">
-                            <Form.Label>Registro</Form.Label>
-                            <Form.Control type="input" placeholder="Id de Registro" value={maquina.id} />
-                        </Form.Group>
+                        <Form.Control type="hidden" name="id" value={maquina.id} />
                         <Form.Group className="mb-3" controlId="formNome">
                             <Form.Label>Nome</Form.Label>
-                            <Form.Control type="input" placeholder="Nome" value={maquina.nome} />
+                            <Form.Control type="input" placeholder="Nome" name="nome" value={maquina.nome} onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formDescricao">
                             <Form.Label>Descrição</Form.Label>
-                            <Form.Control type="input" placeholder="Descrição" value={maquina.descricao} />
+                            <Form.Control type="input" placeholder="Descrição" name="descricao" value={maquina.descricao} onChange={handleChange} />
                         </Form.Group>
                     </Row>
                     <FormButton />

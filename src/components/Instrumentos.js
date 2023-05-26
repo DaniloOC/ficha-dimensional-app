@@ -19,25 +19,21 @@ const Instrumentos = () => {
             { name: 'nome', value: 'Nome' },
             { name: 'descricao', value: 'Descrição' },
             { name: 'remover', label: 'Remover', type: 'button', click: (item) => {
-                console.log('removerProduto', item);
-                const index = instrumentos.findIndex(({ id }) => id === item.id);
-                if (index !== -1) {
-                    setInstrumentos([
-                        ...instrumentos.slice(0, index),
-                        ...instrumentos.slice(index + 1)
-                    ]);
-                }
+                console.log('remover-instrumento', item);
+                InstrumentosService.remove(item.id)
+                    .then((r) => console.log('Removido com sucesso!'))
+                    .then(() => window.location.reload(false));
             }},
             { name: 'editar', label: 'Editar', type: 'button', click: (item) => {
-                console.log('editarsetInstrumento', item);
                 navigate('/forms/instrumento/' + item.id);
             }}
         ],
     };
 
     useEffect(() => {
-        const intrs = InstrumentosService.findAll();
-        setInstrumentos(intrs);
+        InstrumentosService.findAll()
+            .then((r) => r.json())
+            .then((response) => setInstrumentos(response));
     }, []);
 
     return (

@@ -17,26 +17,23 @@ const Funcionarios = () => {
         datas: [
             { name: 'id', value: 'Registro' },
             { name: 'nome', value: 'Nome' },
+            { name: 'cpf', value: 'CPF' },
             { name: 'remover', label: 'Remover', type: 'button', click: (item) => {
-                console.log('removerFuncionario', item);
-                const index = funcionarios.findIndex(({ id }) => id === item.id);
-                if (index !== -1) {
-                    setFuncionarios([
-                        ...funcionarios.slice(0, index),
-                        ...funcionarios.slice(index + 1)
-                    ]);
-                }
+                console.log('remover-funcionario', item);
+                FuncionariosService.remove(item.id)
+                    .then((r) => console.log('Removido com sucesso!'))
+                    .then(() => window.location.reload(false));
             }},
             { name: 'editar', label: 'Editar', type: 'button', click: (item) => {
-                console.log('editarFuncionario', item);
                 navigate('/forms/funcionario/' + item.id);
             }}
         ],
     };
 
     useEffect(() => {
-        const funcs = FuncionariosService.findAll();
-        setFuncionarios(funcs);
+        FuncionariosService.findAll()
+            .then((r) => r.json())
+            .then((response) => setFuncionarios(response));
     }, []);
 
     return (

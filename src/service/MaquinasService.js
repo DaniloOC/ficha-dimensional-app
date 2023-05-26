@@ -1,27 +1,27 @@
+const URI_API = "http://localhost:8080/api/maquina";
+
 const MaquinasService = {
 
-    maquinas: [
-        { 'id': 1, 'nome': 'Fresa', descricao: 'Fresadora vertical' },
-        { 'id': 2, 'nome': 'Torno', descricao: 'Torno CNC' },
-    ],
-
     findAll: function () {
-        return this.maquinas;
+        return fetch(URI_API);
     },
 
     add: function (maquina) {
-        console.log('add', maquina);
-        this.maquinas.push(maquina);
+        console.log('add-maquina', maquina);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(maquina)
+        };
+        return fetch(URI_API, requestOptions);
     },
 
     findById: function (id) {
-        if (id === undefined || id === '') {
-            return {};
-        }
-        const itens = this.maquinas.filter((f) => {
-            return f.id === parseInt(id);
-        });
-        return itens.length > 0 ? itens[0] : {};
+        return fetch(URI_API + "/" + parseInt(id));
+    },
+
+    remove: function (id) {
+        return fetch(URI_API + "/" + parseInt(id), { method: 'DELETE' });
     }
 
 };

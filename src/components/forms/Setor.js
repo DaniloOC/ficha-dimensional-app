@@ -9,22 +9,35 @@ const Setor = () => {
 
     const navigate = useNavigate();
     const params = useParams();
-    const [setor, setSetor] = useState([]);
+    const [setor, setSetor] = useState({
+        id: null,
+        nome: '',
+        descricao: ''
+    });
 
     const onFormSubmit = (event) => {
         event.preventDefault();
-        console.log(event);
-        const formData = new FormData(event.target);
-        const formDataObj = Object.fromEntries(formData.entries());
-        console.log(formDataObj);
-        SetoresService.add(formDataObj);
-        navigate('/setores');
+        console.log('Setor:', setor);
+        SetoresService.add(setor)
+            .then(() => setSetor({
+                id: null,
+                nome: '',
+                descricao: ''
+            }))
+            .then(() => navigate('/setores'));
+    };
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setSetor({...setor, ...{[name]: value}});
     };
 
     useEffect(() => {
-        const sts = SetoresService.findById(params.id);
-        console.log("sts", sts);
-        setSetor(sts);
+        if (params.id !== undefined && params.id !== '') {
+            SetoresService.findById(params.id)
+                .then((r) => r.json())
+                .then((response) => setSetor(response));
+        }
     }, [params]);
 
     return (
@@ -34,17 +47,14 @@ const Setor = () => {
             >
                 <Form onSubmit={onFormSubmit}>
                     <Row>
-                        <Form.Group className="mb-3" controlId="formRegistro">
-                            <Form.Label>Registro</Form.Label>
-                            <Form.Control type="input" placeholder="Id de Registro" value={setor.id} />
-                        </Form.Group>
+                        <Form.Control type="hidden" name="id" value={setor.id} />
                         <Form.Group className="mb-3" controlId="formNome">
                             <Form.Label>Nome</Form.Label>
-                            <Form.Control type="input" placeholder="Nome" value={setor.nome} />
+                            <Form.Control type="input" placeholder="Nome" name="nome" value={setor.nome} onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formDescricao">
                             <Form.Label>Descrição</Form.Label>
-                            <Form.Control type="input" placeholder="Descrição" value={setor.descricao} />
+                            <Form.Control type="input" placeholder="Descrição" name="descricao" value={setor.descricao} onChange={handleChange} />
                         </Form.Group>
                     </Row>
                     <FormButton />

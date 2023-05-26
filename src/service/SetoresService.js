@@ -1,27 +1,27 @@
+const URI_API = "http://localhost:8080/api/setor";
+
 const SetoresService = {
 
-    setores: [
-        { 'id': 1, 'nome': 'Corte', descricao: 'Corte' },
-        { 'id': 2, 'nome': 'Desbaste', descricao: 'Desbaste' },
-    ],
-
     findAll: function () {
-        return this.setores;
+        return fetch(URI_API);
     },
 
     add: function (setor) {
-        console.log('add', setor);
-        this.setores.push(setor);
+        console.log('add-setor', setor);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(setor)
+        };
+        return fetch(URI_API, requestOptions);
     },
 
     findById: function (id) {
-        if (id === undefined || id === '') {
-            return {};
-        }
-        const itens = this.setores.filter((f) => {
-            return f.id === parseInt(id);
-        });
-        return itens.length > 0 ? itens[0] : {};
+        return fetch(URI_API + "/" + parseInt(id));
+    },
+
+    remove: function (id) {
+        return fetch(URI_API + "/" + parseInt(id), { method: 'DELETE' });
     }
 
 };

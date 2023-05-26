@@ -9,22 +9,35 @@ const Funcionario = () => {
 
     const navigate = useNavigate();
     const params = useParams();
-    const [funcionario, setFuncionario] = useState([]);
+    const [funcionario, setFuncionario] = useState({
+        id: null,
+        nome: '',
+        cpf: ''
+    });
 
     const onFormSubmit = (event) => {
         event.preventDefault();
-        console.log(event);
-        const formData = new FormData(event.target);
-        const formDataObj = Object.fromEntries(formData.entries());
-        console.log(formDataObj);
-        FuncionariosService.add(formDataObj);
-        navigate('/funcionarios');
+        console.log('Funcinario:', funcionario);
+        FuncionariosService.add(funcionario)
+            .then(() => setFuncionario({
+                id: null,
+                nome: '',
+                cpf: ''
+            }))
+            .then(() => navigate('/funcionarios'));
+    };
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFuncionario({...funcionario, ...{[name]: value}});
     };
 
     useEffect(() => {
-        const func = FuncionariosService.findById(params.id);
-        console.log("func", func);
-        setFuncionario(func);
+        if (params.id !== undefined && params.id !== '') {
+            FuncionariosService.findById(params.id)
+                .then((r) => r.json())
+                .then((response) => setFuncionario(response));
+        }
     }, [params]);
 
     return (
@@ -34,13 +47,14 @@ const Funcionario = () => {
             >
                 <Form onSubmit={onFormSubmit}>
                     <Row>
-                        <Form.Group className="mb-3" controlId="formRegistro">
-                            <Form.Label>Registro</Form.Label>
-                            <Form.Control type="input" placeholder="Id de Registro" name='id' value={funcionario.id} />
-                        </Form.Group>
+                        <Form.Control type="hidden" name="id" value={funcionario.id} />
                         <Form.Group className="mb-3" controlId="formNome">
                             <Form.Label>Nome</Form.Label>
-                            <Form.Control type="input" placeholder="Nome" name='nome' value={funcionario.nome} />
+                            <Form.Control type="input" placeholder="Nome" name='nome' value={funcionario.nome} onChange={handleChange} />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="formCpf">
+                            <Form.Label>CPF</Form.Label>
+                            <Form.Control type="input" placeholder="CPF" name='cpf' value={funcionario.cpf} onChange={handleChange} />
                         </Form.Group>
                     </Row>
                     <FormButton />
